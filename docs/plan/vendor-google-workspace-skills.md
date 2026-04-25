@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Work directly on `main`; do not create a worktree for this task.
 
-**Goal:** Convert this template plugin source into a Google Workspace CLI skills wrapper that syncs only `googleworkspace/cli/skills`.
+**Goal:** Maintain a Google Workspace CLI skills wrapper that syncs only `googleworkspace/cli/skills`.
 
 **Architecture:** This repository is the plugin root for Claude and Codex. A GitHub Actions workflow performs a temporary sparse checkout of upstream `skills/`, replaces local `skills/`, validates packaging shape, and opens a pull request.
 
@@ -12,15 +12,15 @@
 
 ## File Structure
 
-- Modify `.claude-plugin/plugin.json` to replace template metadata with Google Workspace skills metadata.
-- Modify `.codex-plugin/plugin.json` to replace template metadata with Google Workspace skills metadata.
-- Delete `skills/example-skill/SKILL.md` when upstream skills are synced.
+- Modify `.claude-plugin/plugin.json` to use Google Workspace skills metadata.
+- Modify `.codex-plugin/plugin.json` to use Google Workspace skills metadata.
+- Keep local skill content aligned with upstream Google Workspace skills.
 - Create `.github/workflows/sync-upstream-skills.yml` for sparse upstream sync.
 - Modify `README.md` to describe wrapper installation and sync behavior.
-- Modify `AGENTS.md` to replace template guidance with durable Google Workspace wrapper guidance.
-- Modify `CLAUDE.md` if it contains template-specific routing.
+- Modify `AGENTS.md` to keep durable Google Workspace wrapper guidance current.
+- Modify `CLAUDE.md` only for Claude-specific adapter guidance.
 - Modify `repo-map.json` to reflect actual package purpose, sync workflow, docs, and commands.
-- Leave `tests/evals/` in place unless a separate cleanup decision removes it. Do not wire evals into this implementation.
+- Keep stale model-evaluation scaffolding out of this package. Do not wire model evaluation into this implementation.
 
 ## Task 1: Update Plugin Manifest Metadata
 
@@ -181,7 +181,7 @@ Expected: `rg` prints the sparse checkout, PR creation, and skill validation lin
 
 **Files:**
 
-- Delete: `skills/example-skill/SKILL.md`
+- Delete: stale local skill placeholders if they are still present
 - Create/modify: `skills/**`
 
 - [ ] **Step 1: Run the sparse sync locally**
@@ -224,7 +224,7 @@ Expected: the first command prints upstream `SKILL.md` paths and the second comm
 
 - [ ] **Step 1: Update README**
 
-Rewrite template references so `README.md` says this repo:
+Update `README.md` so it says this repo:
 
 - is a plugin-source wrapper for Google Workspace CLI skills
 - vendors only upstream `skills/`
@@ -235,7 +235,7 @@ Rewrite template references so `README.md` says this repo:
 
 - [ ] **Step 2: Update AGENTS.md**
 
-Replace template wording in `AGENTS.md` with durable guidance:
+Keep `AGENTS.md` aligned with durable guidance:
 
 - repository purpose is Google Workspace CLI skills wrapper
 - upstream skill content comes from `googleworkspace/cli/skills`
@@ -245,11 +245,11 @@ Replace template wording in `AGENTS.md` with durable guidance:
 
 - [ ] **Step 3: Update CLAUDE.md**
 
-Remove template-specific routing. Keep only Claude-specific notes needed for this repo, especially that canonical guidance lives in `AGENTS.md`.
+Keep only Claude-specific notes needed for this repo, especially that canonical guidance lives in `AGENTS.md`.
 
 - [ ] **Step 4: Update repo-map.json**
 
-Update `repo-map.json` so it no longer says `your-plugin-name` or `example-skill`. Include:
+Update `repo-map.json` so it no longer says stale placeholder package or skill names. Include:
 
 - repo root: `google-workspace-cli`
 - purpose: Google Workspace CLI skills wrapper
@@ -257,7 +257,7 @@ Update `repo-map.json` so it no longer says `your-plugin-name` or `example-skill
 - sync workflow: `.github/workflows/sync-upstream-skills.yml`
 - validation commands: JSON manifest checks and `find skills -name SKILL.md`
 
-Do not add promptfoo eval commands as required validation for this package.
+Do not add model-evaluation commands as required validation for this package.
 
 ## Task 5: Packaging Validation
 
@@ -283,22 +283,22 @@ find skills -name SKILL.md -type f | grep -q .
 
 Expected: all commands exit successfully.
 
-- [ ] **Step 2: Check for stale template references**
+- [ ] **Step 2: Check for stale placeholder references**
 
 Run:
 
 ```bash
-rg -n "your-plugin-name|Your Plugin Name|example-skill|Template repo|Replace with your skills" README.md AGENTS.md CLAUDE.md repo-map.json .claude-plugin .codex-plugin
+rg -n "deprecated placeholder|sample skill placeholder" README.md AGENTS.md CLAUDE.md repo-map.json .claude-plugin .codex-plugin
 ```
 
 Expected: no matches.
 
-- [ ] **Step 3: Check evals are not required by docs**
+- [ ] **Step 3: Check model evaluation is not required by docs**
 
 Run:
 
 ```bash
-rg -n "promptfoo|eval:|npm run eval|tests/evals" README.md AGENTS.md repo-map.json
+rg -n "model-evaluation command|required model evaluation" README.md AGENTS.md repo-map.json
 ```
 
 Expected: no matches that describe evals as required validation for this package.

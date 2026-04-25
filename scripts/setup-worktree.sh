@@ -39,11 +39,3 @@ else
     echo "direnv: skipped (no .envrc in worktree)"
   fi
 fi
-
-evals_dir="$worktree_path/tests/evals"
-if [[ -f "$evals_dir/package.json" ]]; then
-  echo "npm: installing eval dependencies in $evals_dir"
-  (cd "$evals_dir" && npm install --no-audit --no-fund 2>&1) || echo "npm: install failed (non-fatal)"
-else
-  echo "npm: skipped (no package.json in tests/evals)"
-fi

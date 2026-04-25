@@ -8,17 +8,17 @@ This repository remains the installable plugin boundary. The upstream Google Wor
 
 ## Current State
 
-The repository is a template-shaped plugin source with:
+The repository is a wrapper plugin source with:
 
 - `.claude-plugin/plugin.json`
 - `.codex-plugin/plugin.json`
-- `skills/example-skill/SKILL.md`
+- `skills/` copied from upstream `googleworkspace/cli/skills`
 - `AGENTS.md`
 - `CLAUDE.md`
 - `repo-map.json`
-- `tests/evals/`
+- `.github/workflows/sync-upstream-skills.yml`
 
-The target state should replace the example skill with upstream Google Workspace skills and keep this repo focused on packaging, sync, and plugin metadata. The eval harness is out of scope for this change.
+The repository should stay focused on packaging, sync, and plugin metadata. Model-based skill evaluation is out of scope for this package.
 
 ## Chosen Approach
 
@@ -58,11 +58,11 @@ A marketplace-level sparse install would avoid copying files into this repo, but
 
 The implementation should make these repository changes:
 
-- Rename manifest metadata from template values to Google Workspace skill package values.
-- Replace `skills/example-skill/` with the synced upstream `skills/` content.
+- Rename manifest metadata from placeholder values to Google Workspace skill package values.
+- Keep `skills/` synced from upstream Google Workspace skill content.
 - Add `.github/workflows/sync-upstream-skills.yml`.
 - Update `README.md`, `AGENTS.md`, `CLAUDE.md`, and `repo-map.json` to describe the wrapper plugin boundary and sync workflow.
-- Remove eval-harness instructions from user-facing setup guidance for this package unless a future change explicitly reintroduces eval ownership.
+- Keep model-evaluation instructions out of user-facing setup guidance unless a future change explicitly reintroduces that ownership.
 
 ## Sync Workflow
 
@@ -94,7 +94,7 @@ test -d skills
 find skills -name SKILL.md -type f | grep -q .
 ```
 
-No promptfoo evals should be run or required by this sync workflow.
+No model-evaluation suite should be run or required by this sync workflow.
 
 The weekly schedule should be encoded in the workflow itself:
 
@@ -122,7 +122,7 @@ The repository URL should point to this wrapper repo. The skill path remains `./
 - Users still need the `gws` CLI installed and authenticated to use most skills.
 - Marketplaces should point to this wrapper repo as the plugin source.
 
-`AGENTS.md` and `repo-map.json` should identify this repo as a wrapper plugin source. They should not preserve template references such as `your-plugin-name` or `example-skill`.
+`AGENTS.md` and `repo-map.json` should identify this repo as a wrapper plugin source. They should not preserve placeholder package references.
 
 ## Validation
 
@@ -131,9 +131,9 @@ Validation for this change is packaging-only:
 - JSON parse both manifests.
 - Confirm `skills/` exists.
 - Confirm at least one `SKILL.md` exists under `skills/`.
-- Confirm docs no longer describe `example-skill` as the shipped skill.
+- Confirm docs no longer describe a placeholder skill as the shipped skill.
 
-Promptfoo evals are intentionally out of scope.
+Model-based skill evaluation is intentionally out of scope.
 
 ## Risks
 
