@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-04-18T00:00:00Z",
-  "repo_root": "your-plugin-name",
+  "repo_root": "google-workspace-cli",
   "primary_languages": ["Markdown", "JSON", "Shell", "YAML"],
   "package_managers": [
     {
@@ -16,9 +16,9 @@
   ],
   "applications": [
     {
-      "name": "your-plugin-name plugin",
+      "name": "google-workspace-cli plugin",
       "type": "shared plugin source",
-      "description": "Single plugin-source repository with Claude and Codex manifests, canonical skills under skills/, and a promptfoo eval harness under tests/evals/."
+      "description": "Plugin-source wrapper for Google Workspace CLI skills, with Claude and Codex manifests and canonical synced skills under skills/."
     }
   ],
   "modules": {
@@ -41,19 +41,28 @@
     "scripts": {
       "path": "scripts/",
       "description": "Repository helper scripts. setup-worktree.sh prepares a newly created sibling worktree."
+    },
+    "design_doc": {
+      "path": "docs/design/vendor-google-workspace-skills.md",
+      "description": "Design for vendoring only googleworkspace/cli skills into this plugin-source wrapper."
+    },
+    "implementation_plan": {
+      "path": "docs/plan/vendor-google-workspace-skills.md",
+      "description": "Implementation plan for sparse-syncing upstream Google Workspace CLI skills without eval requirements."
     }
   },
   "key_directories": {
     "skills/": "All skill content owned by this plugin repo",
     "tests/evals/": "Promptfoo eval packages, prompts, assertions, and scripts for skill regression checks",
     "scripts/": "Repository helper scripts",
+    "docs/design/": "Design documents for repository changes",
+    "docs/plan/": "Implementation plans for repository changes",
     ".claude-plugin/": "Claude plugin manifest",
     ".codex-plugin/": "Codex plugin manifest"
   },
   "commands": {
     "setup_worktree": "./scripts/setup-worktree.sh ../worktrees/<branch-name>",
     "eval_all": "cd tests/evals && npm run eval",
-    "eval_example_skill": "cd tests/evals && npm run eval:example-skill",
     "eval_coverage": "cd tests/evals && npm run eval:coverage",
     "eval_codex_compatibility": "cd tests/evals && npm run eval:codex-compatibility",
     "eval_view": "cd tests/evals && npm run view"
