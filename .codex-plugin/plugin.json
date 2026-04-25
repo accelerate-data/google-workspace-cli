@@ -1,22 +1,24 @@
 {
-  "name": "your-plugin-name",
-  "description": "Short description of what this plugin provides.",
+  "name": "google-workspace-cli",
+  "description": "Google Workspace CLI skills for Codex.",
   "author": {
     "name": "Accelerate Data"
   },
-  "repository": "https://github.com/accelerate-data/your-plugin-name",
-  "license": "MIT",
+  "repository": "https://github.com/accelerate-data/google-workspace-cli",
+  "license": "Apache-2.0",
   "keywords": [
+    "google-workspace",
+    "gws",
     "skills",
     "codex",
     "claude-code"
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Your Plugin Name",
-    "shortDescription": "Short description of what this plugin provides.",
+    "displayName": "Google Workspace CLI",
+    "shortDescription": "Google Workspace CLI skills for Codex.",
     "developerName": "Accelerate Data",
-    "category": "Coding",
+    "category": "Productivity",
     "capabilities": [],
     "screenshots": []
   }
