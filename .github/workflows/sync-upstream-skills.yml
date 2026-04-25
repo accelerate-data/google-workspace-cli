@@ -1,0 +1,46 @@
+name: Sync upstream Google Workspace skills
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sparse checkout upstream skills
+        run: |
+          tmpdir="$(mktemp -d)"
+          git clone --depth 1 --filter=blob:none --sparse \
+            https://github.com/googleworkspace/cli.git \
+            "$tmpdir/googleworkspace-cli"
+
+          cd "$tmpdir/googleworkspace-cli"
+          git sparse-checkout set skills
+
+          cd "$GITHUB_WORKSPACE"
+          rm -rf skills
+          cp -R "$tmpdir/googleworkspace-cli/skills" ./skills
+
+      - name: Validate plugin shape
+        run: |
+          python3 -m json.tool .claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool .codex-plugin/plugin.json >/dev/null
+          test -d skills
+          find skills -name SKILL.md -type f | grep -q .
+
+      - name: Open sync PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/sync-google-workspace-skills
+          title: Sync Google Workspace CLI skills
+          commit-message: Sync Google Workspace CLI skills
+          body: |
+            Syncs `skills/` from `googleworkspace/cli` using sparse checkout.
