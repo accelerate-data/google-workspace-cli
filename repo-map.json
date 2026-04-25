@@ -1,83 +1,85 @@
 {
-  "generated_at": "2026-04-18T00:00:00Z",
+  "generated_at": "2026-04-25T00:00:00Z",
   "repo_root": "google-workspace-cli",
-  "primary_languages": ["Markdown", "JSON", "Shell", "YAML"],
-  "package_managers": [
-    {
-      "name": "npm (eval harness)",
-      "manifest": "tests/evals/package.json"
-    }
-  ],
-  "test_frameworks": [
-    {
-      "name": "promptfoo",
-      "scope": "LLM eval harness for skills owned by this repository. Run via: cd tests/evals && npm run eval"
-    }
+  "purpose": "Google Workspace CLI skills wrapper",
+  "primary_languages": [
+    "Markdown",
+    "JSON",
+    "Shell",
+    "YAML"
   ],
   "applications": [
     {
-      "name": "google-workspace-cli plugin",
+      "name": "google-workspace-cli",
       "type": "shared plugin source",
-      "description": "Plugin-source wrapper for Google Workspace CLI skills, with Claude and Codex manifests and canonical synced skills under skills/."
+      "description": "Plugin-source wrapper that vendors only Google Workspace CLI upstream skills for Claude and Codex marketplaces."
     }
   ],
+  "upstream": {
+    "repository": "https://github.com/googleworkspace/cli",
+    "vendored_path": "skills/",
+    "source_path": "skills/",
+    "policy": "Vendor only googleworkspace/cli/skills, not the full upstream repository."
+  },
   "modules": {
     "claude_manifest": {
       "path": ".claude-plugin/plugin.json",
-      "description": "Claude plugin manifest for this repository."
+      "description": "Claude plugin manifest for this whole-repo plugin source."
     },
     "codex_manifest": {
       "path": ".codex-plugin/plugin.json",
-      "description": "Codex plugin manifest for this repository."
+      "description": "Codex plugin manifest for this whole-repo plugin source."
     },
     "skills": {
       "path": "skills/",
-      "description": "Canonical skill directories. Each skill owns its SKILL.md and any supporting references, assets, scripts, or agents."
+      "description": "Vendored Google Workspace CLI skill directories copied from upstream googleworkspace/cli/skills."
     },
-    "eval_harness": {
-      "path": "tests/evals/",
-      "description": "Promptfoo harness for skills in this repository. One package per skill under tests/evals/packages/."
-    },
-    "scripts": {
-      "path": "scripts/",
-      "description": "Repository helper scripts. setup-worktree.sh prepares a newly created sibling worktree."
+    "sync_workflow": {
+      "path": ".github/workflows/sync-upstream-skills.yml",
+      "description": "GitHub Actions workflow that sparse-checks out upstream skills, replaces local skills/, validates plugin shape, and opens a refresh pull request."
     },
     "design_doc": {
       "path": "docs/design/vendor-google-workspace-skills.md",
-      "description": "Design for vendoring only googleworkspace/cli skills into this plugin-source wrapper."
+      "description": "Design for vendoring only Google Workspace CLI skills into this plugin-source wrapper."
     },
     "implementation_plan": {
       "path": "docs/plan/vendor-google-workspace-skills.md",
-      "description": "Implementation plan for sparse-syncing upstream Google Workspace CLI skills without eval requirements."
+      "description": "Implementation plan for sparse-syncing upstream Google Workspace CLI skills."
+    },
+    "scripts": {
+      "path": "scripts/",
+      "description": "Repository helper scripts, including setup-worktree.sh for sibling worktree preparation."
     }
   },
   "key_directories": {
-    "skills/": "All skill content owned by this plugin repo",
-    "tests/evals/": "Promptfoo eval packages, prompts, assertions, and scripts for skill regression checks",
-    "scripts/": "Repository helper scripts",
+    "skills/": "Vendored Google Workspace CLI skills",
     "docs/design/": "Design documents for repository changes",
     "docs/plan/": "Implementation plans for repository changes",
+    ".github/workflows/": "Repository automation, including upstream skill sync",
     ".claude-plugin/": "Claude plugin manifest",
-    ".codex-plugin/": "Codex plugin manifest"
+    ".codex-plugin/": "Codex plugin manifest",
+    "scripts/": "Repository helper scripts"
   },
+  "key_docs": [
+    "docs/design/vendor-google-workspace-skills.md",
+    "docs/plan/vendor-google-workspace-skills.md"
+  ],
   "commands": {
-    "setup_worktree": "./scripts/setup-worktree.sh ../worktrees/<branch-name>",
-    "eval_all": "cd tests/evals && npm run eval",
-    "eval_coverage": "cd tests/evals && npm run eval:coverage",
-    "eval_codex_compatibility": "cd tests/evals && npm run eval:codex-compatibility",
-    "eval_view": "cd tests/evals && npm run view"
+    "validate_claude_manifest": "python3 -m json.tool .claude-plugin/plugin.json >/dev/null",
+    "validate_codex_manifest": "python3 -m json.tool .codex-plugin/plugin.json >/dev/null",
+    "validate_skills_present": "find skills -name SKILL.md -type f | grep -q .",
+    "setup_worktree": "./scripts/setup-worktree.sh ../worktrees/<branch-name>"
   },
   "conventions": {
-    "skill_location": "All first-party skills live under skills/<skill-name>/",
-    "supporting_material": "References, assets, agents, and scripts stay inside the owning skill directory",
-    "worktrees": "Use sibling worktrees at ../worktrees/<branch-name> and run scripts/setup-worktree.sh after creation",
-    "local_dev_symlinks": "For direct local use, symlink skills/<skill-name> into ~/.claude/skills/<skill-name> and ~/.codex/skills/<skill-name>",
-    "cross_repo_dependencies": "Do not add references that require files outside this repository"
+    "skill_location": "Vendored skills live under skills/<skill-name>/",
+    "upstream_sync": "Use .github/workflows/sync-upstream-skills.yml to refresh skills from googleworkspace/cli/skills",
+    "runtime_requirement": "Users must install and authenticate gws in their own environment for live Google Workspace operations",
+    "marketplace_model": "Claude and Codex marketplaces can point to this repository as a whole-repo plugin source",
+    "worktrees": "Use sibling worktrees at ../worktrees/<branch-name> unless the user explicitly requests work in the main checkout"
   },
   "notes_for_agents": {
-    "startup": "Read this file before exploring the repository. It is the primary startup context for structure, ownership, and eval commands.",
-    "marketplace_model": "This repository is a plugin source, not a marketplace. Marketplaces in other repositories should point to this repo as the plugin source.",
-    "eval_scope": "tests/evals only covers skills owned by this repository.",
-    "update_repo_map": "Refresh this file whenever manifests, skill layout, eval layout, or command references change."
+    "startup": "Read this file before exploring the repository. It is the primary startup context for structure, ownership, sync workflow, docs, and validation commands.",
+    "update_repo_map": "Refresh this file whenever manifests, sync workflow, docs, validation commands, or skill layout change.",
+    "sync_scope": "This repository owns packaging metadata and sync automation; upstream owns the vendored skill bodies."
   }
 }

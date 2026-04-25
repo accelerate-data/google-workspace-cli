@@ -1,89 +1,51 @@
-# Your Plugin Name
+# Google Workspace CLI Skills
 
-> **Template repo** — rename this, update the manifests, replace the example skill, and go.
+This repository is a plugin-source wrapper for Google Workspace CLI skills used by Claude Code and Codex.
 
-Plugin repository for [describe what this plugin does] skills used by Claude Code and Codex.
+It vendors only upstream `skills/` content from [`googleworkspace/cli`](https://github.com/googleworkspace/cli). It does not vendor the full `googleworkspace/cli` repository, command implementation, release assets, or source tree.
 
-This repository is a single plugin source repo, not a marketplace repo.
+Claude and Codex marketplaces can use this repository as a whole-repo plugin source. The root manifests are:
 
-- Claude and Codex marketplaces should point to this repo as the plugin source.
-- The canonical skill content lives in [`skills/`](./skills).
+- `.claude-plugin/plugin.json`
+- `.codex-plugin/plugin.json`
 
-## Getting Started
+## Runtime Requirement
 
-1. **Rename** — update `name`, `description`, `repository` in `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
-2. **Replace the example skill** — edit or replace `skills/example-skill/` with your first real skill.
-3. **Update evals** — rename `tests/evals/packages/example-skill/` to match, update the prompt and assertions.
-4. **Update `skill-eval-coverage-baseline.json`** — list any skills that intentionally have no eval package yet.
-5. **Update `AGENTS.md`** — update the Skills section to list your real skills.
-6. **Update `repo-map.json`** — reflect your actual skill names and eval commands.
+The packaged skills invoke Google Workspace CLI workflows. For live Google Workspace operations, users must install `gws` and authenticate it in their own environment before using these skills.
 
-## Layout
+## Skill Refreshes
 
-```text
-.
-├── .claude-plugin/plugin.json      # Claude plugin manifest
-├── .codex-plugin/plugin.json       # Codex plugin manifest
-├── skills/
-│   └── example-skill/              # Replace with your skills
-│       └── SKILL.md
-├── tests/evals/
-│   ├── packages/example-skill/     # One eval package per skill
-│   ├── prompts/                    # Eval prompts
-│   ├── assertions/                 # Shared assertion helpers
-│   └── scripts/                   # Eval runner scripts
-└── README.md
-```
+Upstream skill refreshes are handled by `.github/workflows/sync-upstream-skills.yml`.
 
-## Use In Claude
+The workflow performs a temporary sparse checkout of `googleworkspace/cli`, copies only `skills/` into this repository, validates the plugin shape, and opens a pull request with the refreshed skill content.
 
-Install through a Claude plugin marketplace pointing to this repo, or symlink locally:
+## Local Use
+
+For direct local use without a marketplace, symlink individual skill directories from this repository into the matching agent skill directory:
 
 ```bash
-mkdir -p ~/.claude/skills
+mkdir -p ~/.claude/skills ~/.codex/skills
 
-ln -s /absolute/path/to/your-plugin/skills/your-skill-name \
-  ~/.claude/skills/your-skill-name
+ln -s /absolute/path/to/google-workspace-cli/skills/<skill-name> \
+  ~/.claude/skills/<skill-name>
+
+ln -s /absolute/path/to/google-workspace-cli/skills/<skill-name> \
+  ~/.codex/skills/<skill-name>
 ```
 
-Enable the pre-commit hook:
+Keep the symlink name identical to the skill directory name.
+
+## Validation
 
 ```bash
-git config core.hooksPath .githooks
-chmod +x .githooks/pre-commit
+python3 -m json.tool .claude-plugin/plugin.json >/dev/null
+python3 -m json.tool .codex-plugin/plugin.json >/dev/null
+find skills -name SKILL.md -type f | grep -q .
 ```
 
-## Use In Codex
+## Maintenance Notes
 
-Install through a Codex plugin marketplace pointing to this repo, or symlink locally:
-
-```bash
-mkdir -p ~/.codex/skills
-
-ln -s /absolute/path/to/your-plugin/skills/your-skill-name \
-  ~/.codex/skills/your-skill-name
-```
-
-## Eval Harness
-
-Promptfoo evals live under [`tests/evals/`](./tests/evals).
-
-```bash
-cd tests/evals
-npm install
-npm run eval
-```
-
-Individual skill suite:
-
-```bash
-cd tests/evals
-npm run eval:example-skill
-```
-
-## Development Notes
-
-- Keep all skill directories under `skills/`.
-- Keep skill assets, references, and scripts inside the owning skill directory.
-- Avoid cross-repo relative paths — a plugin install is expected to be self-contained.
-- Bump the version in `.claude-plugin/plugin.json` with every PR (enforced by CI).
+- Keep upstream skill content under `skills/`.
+- Keep packaging metadata in the root Claude and Codex manifests.
+- Update `repo-map.json` when manifests, the sync workflow, docs, or the skill layout change.
+- Use `.github/workflows/sync-upstream-skills.yml` for upstream refreshes instead of manually copying unrelated upstream files.
