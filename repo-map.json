@@ -36,7 +36,11 @@
     },
     "sync_workflow": {
       "path": ".github/workflows/sync-upstream-skills.yml",
-      "description": "GitHub Actions workflow that sparse-checks out upstream skills, replaces local skills/, validates plugin shape, and opens a refresh pull request."
+      "description": "GitHub Actions workflow that runs weekly and by manual workflow_dispatch to sparse-check out upstream skills, replace local skills/, validate plugin shape, and open a refresh pull request."
+    },
+    "version_bump_workflow": {
+      "path": ".github/workflows/version-bump-check.yml",
+      "description": "Packaging CI workflow that enforces a .claude-plugin/plugin.json version bump on pull requests to main."
     },
     "design_doc": {
       "path": "docs/design/vendor-google-workspace-skills.md",
@@ -55,7 +59,7 @@
     "skills/": "Vendored Google Workspace CLI skills",
     "docs/design/": "Design documents for repository changes",
     "docs/plan/": "Implementation plans for repository changes",
-    ".github/workflows/": "Repository automation, including upstream skill sync",
+    ".github/workflows/": "Repository automation, including weekly/manual upstream skill sync and PR version-bump checks",
     ".claude-plugin/": "Claude plugin manifest",
     ".codex-plugin/": "Codex plugin manifest",
     "scripts/": "Repository helper scripts"
@@ -72,7 +76,8 @@
   },
   "conventions": {
     "skill_location": "Vendored skills live under skills/<skill-name>/",
-    "upstream_sync": "Use .github/workflows/sync-upstream-skills.yml to refresh skills from googleworkspace/cli/skills",
+    "upstream_sync": "Use .github/workflows/sync-upstream-skills.yml to refresh skills from googleworkspace/cli/skills; it runs weekly via GitHub Actions and supports manual workflow_dispatch",
+    "version_bump": ".github/workflows/version-bump-check.yml enforces a .claude-plugin/plugin.json version bump on pull requests to main",
     "runtime_requirement": "Users must install and authenticate gws in their own environment for live Google Workspace operations",
     "marketplace_model": "Claude and Codex marketplaces can point to this repository as a whole-repo plugin source",
     "worktrees": "Use sibling worktrees at ../worktrees/<branch-name> unless the user explicitly requests work in the main checkout"

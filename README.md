@@ -17,7 +17,7 @@ The packaged skills invoke Google Workspace CLI workflows. For live Google Works
 
 Upstream skill refreshes are handled by `.github/workflows/sync-upstream-skills.yml`.
 
-The workflow performs a temporary sparse checkout of `googleworkspace/cli`, copies only `skills/` into this repository, validates the plugin shape, and opens a pull request with the refreshed skill content.
+The workflow runs weekly via GitHub Actions and can also be started manually with `workflow_dispatch`. It performs a temporary sparse checkout of `googleworkspace/cli`, copies only `skills/` into this repository, validates the plugin shape, and opens a pull request with the refreshed skill content.
 
 ## Local Use
 
@@ -47,5 +47,6 @@ find skills -name SKILL.md -type f | grep -q .
 
 - Keep upstream skill content under `skills/`.
 - Keep packaging metadata in the root Claude and Codex manifests.
+- `.github/workflows/version-bump-check.yml` enforces a `.claude-plugin/plugin.json` version bump on pull requests to `main`.
 - Update `repo-map.json` when manifests, the sync workflow, docs, or the skill layout change.
 - Use `.github/workflows/sync-upstream-skills.yml` for upstream refreshes instead of manually copying unrelated upstream files.

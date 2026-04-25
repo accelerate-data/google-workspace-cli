@@ -24,7 +24,8 @@ This repository is a single plugin-source wrapper, not a marketplace repo and no
 - This repo vendors only upstream `skills/`.
 - This repo owns packaging metadata, root plugin manifests, repository docs, and the upstream sync workflow.
 - Root manifests: `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
-- Sync workflow: `.github/workflows/sync-upstream-skills.yml`.
+- Sync workflow: `.github/workflows/sync-upstream-skills.yml`, which runs weekly via GitHub Actions and also supports manual `workflow_dispatch` runs.
+- Packaging CI: `.github/workflows/version-bump-check.yml` enforces a `.claude-plugin/plugin.json` version bump on pull requests to `main`.
 
 ## Agent Startup Context
 
@@ -51,6 +52,8 @@ find skills -name SKILL.md -type f | grep -q .
 ```
 
 There is no model-evaluation requirement for sync-only or packaging-only changes in this package.
+
+The version-bump workflow is packaging CI, not a model-evaluation gate. Keep `.claude-plugin/plugin.json` version updates aligned with PRs that change packaged content or metadata.
 
 ## Skill Ownership
 
