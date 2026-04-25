@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "example-skill — describe what this skill does"
+
+prompts:
+  - id: example-skill
+    label: example-skill
+    raw: file://../../prompts/skill-example-skill.txt
+
+providers:
+  - id: anthropic:claude-agent-sdk
+    config:
+      model: claude-haiku-4-5-20251001
+      working_dir: ../..
+      max_turns: 20
+      permission_mode: auto
+      append_allowed_tools:
+        - Read
+        - Bash
+        - Glob
+        - Grep
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: file://../../assertions/check-skill-contract.js
+
+tests:
+  - description: "example-skill — happy path"
+    vars:
+      scenario: "The user has asked the agent to perform the skill's primary task."
+      extra_context: ""
+      required_terms: ""
+      forbidden_terms: ""
+    # Add expect_<field>: "true"/"false" vars here to drive check-skill-contract.js assertions.
+    # Example:
+    # vars:
+    #   expect_reads_context_first: "true"
+    #   expect_creates_output: "true"
+    #   required_terms: "summary,result"

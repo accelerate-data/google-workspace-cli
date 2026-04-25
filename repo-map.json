@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-04-18T00:00:00Z",
+  "repo_root": "your-plugin-name",
+  "primary_languages": ["Markdown", "JSON", "Shell", "YAML"],
+  "package_managers": [
+    {
+      "name": "npm (eval harness)",
+      "manifest": "tests/evals/package.json"
+    }
+  ],
+  "test_frameworks": [
+    {
+      "name": "promptfoo",
+      "scope": "LLM eval harness for skills owned by this repository. Run via: cd tests/evals && npm run eval"
+    }
+  ],
+  "applications": [
+    {
+      "name": "your-plugin-name plugin",
+      "type": "shared plugin source",
+      "description": "Single plugin-source repository with Claude and Codex manifests, canonical skills under skills/, and a promptfoo eval harness under tests/evals/."
+    }
+  ],
+  "modules": {
+    "claude_manifest": {
+      "path": ".claude-plugin/plugin.json",
+      "description": "Claude plugin manifest for this repository."
+    },
+    "codex_manifest": {
+      "path": ".codex-plugin/plugin.json",
+      "description": "Codex plugin manifest for this repository."
+    },
+    "skills": {
+      "path": "skills/",
+      "description": "Canonical skill directories. Each skill owns its SKILL.md and any supporting references, assets, scripts, or agents."
+    },
+    "eval_harness": {
+      "path": "tests/evals/",
+      "description": "Promptfoo harness for skills in this repository. One package per skill under tests/evals/packages/."
+    },
+    "scripts": {
+      "path": "scripts/",
+      "description": "Repository helper scripts. setup-worktree.sh prepares a newly created sibling worktree."
+    }
+  },
+  "key_directories": {
+    "skills/": "All skill content owned by this plugin repo",
+    "tests/evals/": "Promptfoo eval packages, prompts, assertions, and scripts for skill regression checks",
+    "scripts/": "Repository helper scripts",
+    ".claude-plugin/": "Claude plugin manifest",
+    ".codex-plugin/": "Codex plugin manifest"
+  },
+  "commands": {
+    "setup_worktree": "./scripts/setup-worktree.sh ../worktrees/<branch-name>",
+    "eval_all": "cd tests/evals && npm run eval",
+    "eval_example_skill": "cd tests/evals && npm run eval:example-skill",
+    "eval_coverage": "cd tests/evals && npm run eval:coverage",
+    "eval_codex_compatibility": "cd tests/evals && npm run eval:codex-compatibility",
+    "eval_view": "cd tests/evals && npm run view"
+  },
+  "conventions": {
+    "skill_location": "All first-party skills live under skills/<skill-name>/",
+    "supporting_material": "References, assets, agents, and scripts stay inside the owning skill directory",
+    "worktrees": "Use sibling worktrees at ../worktrees/<branch-name> and run scripts/setup-worktree.sh after creation",
+    "local_dev_symlinks": "For direct local use, symlink skills/<skill-name> into ~/.claude/skills/<skill-name> and ~/.codex/skills/<skill-name>",
+    "cross_repo_dependencies": "Do not add references that require files outside this repository"
+  },
+  "notes_for_agents": {
+    "startup": "Read this file before exploring the repository. It is the primary startup context for structure, ownership, and eval commands.",
+    "marketplace_model": "This repository is a plugin source, not a marketplace. Marketplaces in other repositories should point to this repo as the plugin source.",
+    "eval_scope": "tests/evals only covers skills owned by this repository.",
+    "update_repo_map": "Refresh this file whenever manifests, skill layout, eval layout, or command references change."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "your-plugin-name",
+  "description": "Short description of what this plugin provides.",
+  "author": {
+    "name": "Accelerate Data"
+  },
+  "repository": "https://github.com/accelerate-data/your-plugin-name",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "codex",
+    "claude-code"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Your Plugin Name",
+    "shortDescription": "Short description of what this plugin provides.",
+    "developerName": "Accelerate Data",
+    "category": "Coding",
+    "capabilities": [],
+    "screenshots": []
+  }
+}

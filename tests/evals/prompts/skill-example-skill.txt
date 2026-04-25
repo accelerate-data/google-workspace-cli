@@ -1,0 +1,19 @@
+You are preparing to run the example skill in this repository.
+
+Read the skill at `skills/example-skill/SKILL.md`.
+
+Scenario:
+
+- {{scenario}}
+{% if extra_context %}- {{extra_context}}{% endif %}
+
+Do not actually call tools. Return JSON only with this shape:
+
+```json
+{
+  "notes": "string describing how you would execute this skill in the given scenario"
+}
+```
+
+Add any skill-specific boolean fields to this JSON shape as you build out the skill.
+For example: "reads_context_first": true, "creates_output": true
