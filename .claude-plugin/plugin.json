@@ -1,7 +1,7 @@
 {
   "name": "google-workspace-cli",
   "description": "Google Workspace CLI skills for Claude Code.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Accelerate Data"
   },

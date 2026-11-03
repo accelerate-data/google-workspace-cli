@@ -20,6 +20,8 @@
     "developerName": "Accelerate Data",
     "category": "Productivity",
     "capabilities": [],
-    "screenshots": []
-  }
+    "screenshots": [],
+    "longDescription": "Google Workspace CLI skills for Codex."
+  },
+  "version": "0.1.1"
 }
